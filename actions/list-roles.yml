@@ -1,0 +1,13 @@
+apiVersion: mallory.io/v1
+kind: Event
+metadata:
+  name: list-roles
+spec:
+  intruder:
+    serviceAccount: intruder
+  operations:
+  - id: roles
+    verb: list
+    resource:
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: Role

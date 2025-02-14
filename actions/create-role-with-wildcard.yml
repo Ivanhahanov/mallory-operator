@@ -1,0 +1,25 @@
+apiVersion: mallory.io/v1
+kind: Event
+metadata:
+  name: create-role-with-wildcard
+spec:
+  intruder:
+    serviceAccount: intruder
+  operations:
+  - id: wildcard-resources-role
+    verb: create
+    resource:
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: Role
+      metadata:
+        name: wildcard-resources-role
+        labels:
+          app.kubernetes.io/part-of: mallory-operator
+          mallory/rule: Role-With-Wildcard-Created
+      rules:
+      - apiGroups:
+          - ""
+        resources:
+          - "*"
+        verbs:
+          - get

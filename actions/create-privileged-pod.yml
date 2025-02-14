@@ -1,0 +1,41 @@
+apiVersion: mallory.io/v1
+kind: Event
+metadata:
+  name: create-privileged-pod
+spec:
+  intruder:
+    serviceAccount: intruder
+  operations:
+  - id: privileged-pod
+    verb: create
+    resource:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: privileged-pod
+        app.kubernetes.io/part-of: mallory-operator
+        mallory/rule: Privileged-Pod-Created
+      spec:
+        selector:
+          matchLabels:
+            app: privileged-pod
+        template:
+          metadata:
+            labels:
+              app: privileged-pod
+              app.kubernetes.io/part-of: mallory-operator
+          spec:
+            containers:
+            - name: web
+              image: nginx
+              securityContext:
+                privileged: true
+              resources:
+                limits:
+                  memory: "128Mi"
+                  cpu: "500m"
+              ports:
+              - containerPort: 80
+      
+
+

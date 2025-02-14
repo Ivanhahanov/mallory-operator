@@ -1,0 +1,19 @@
+apiVersion: mallory.io/v1
+kind: Event
+metadata:
+  name: list-permissions
+spec:
+  intruder:
+    serviceAccount: intruder
+  operations:
+  - id: can-i-create-pods
+    verb: auth
+    resource:
+      apiVersion: authorization.k8s.io/v1
+      kind: SelfSubjectAccessReview
+      spec:
+        resourceAttributes:
+          verb: create
+          resource: pods
+          namespace: default
+

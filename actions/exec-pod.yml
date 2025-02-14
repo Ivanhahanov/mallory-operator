@@ -1,0 +1,23 @@
+apiVersion: mallory.io/v1
+kind: Event
+metadata:
+  name: exec-etcd
+spec:
+  intruder:
+    serviceAccount: intruder
+  operations:
+  - id: roles
+    verb: exec
+    resource:
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        labels:
+          component: etcd
+        namespace: kube-system
+      spec:
+        containers:
+        - name: etcd
+          command: ["sh", "-c"]
+          args: 
+           - "echo hello, mallory!"

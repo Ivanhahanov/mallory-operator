@@ -1,0 +1,42 @@
+{{- if .Values.rbac.enable }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+  name: mallory-manager-role
+rules:
+- apiGroups:
+  - mallory.io
+  resources:
+  - events
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - mallory.io
+  resources:
+  - events/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - mallory.io
+  resources:
+  - events/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups: 
+  - ""
+  resources: 
+  - "serviceaccounts"
+  verbs: 
+  - "impersonate"
+{{- end -}}

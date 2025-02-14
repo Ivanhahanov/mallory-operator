@@ -1,0 +1,24 @@
+apiVersion: mallory.io/v1
+kind: Event
+metadata:
+  name: create-node-port-svc
+spec:
+  intruder:
+    serviceAccount: intruder
+  operations:
+  - id: node-port-svc
+    verb: create
+    resource:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: node-port-svc
+        labels:
+          app.kubernetes.io/part-of: mallory-operator
+          mallory/rule: Create-NodePort-Service
+      spec:
+        type: NodePort
+        ports:
+          - port: 80
+        selector:
+          app: node-port-svc
