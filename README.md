@@ -36,7 +36,7 @@ helm install mallory oci://registry-1.docker.io/explabs/mallory
 >  If you encounter RBAC errors, you may need to grant yourself cluster-admin
 privileges or be logged in as admin.
 
-### Apply intruder
+### Apply Actions
 You can apply the examples from `actions` directory:
 
 ```sh
@@ -51,22 +51,59 @@ kubectl apply -f actions
 helm uninstall mallory
 ```
 
+## Concept
+![](docs/img/concept.png)
+
+### Actions List
+| Action                            | Rule | Description |
+| --------------------------------- | ---- | ----------- |
+| create-hostnetwork-pod            |      |             |
+| create-node-port-svc              |      |             |
+| create-privileged-pod             |      |             |
+| create-role-with-exec             |      |             |
+| create-role-with-wildcard         |      |             |
+| create-role-with-write-privileges |      |             |
+| create-sensitive-mount-deployment |      |             |
+| create-vanilla-sa                 |      |             |
+| exec-pod                          |      |             |
+| list-cluster-roles                |      |             |
+| list-permissions                  |      |             |
+| list-roles                        |      |             |
+| logs-pod                          |      |             |
+
+### About CRD
+```yaml
+apiVersion: mallory.io/v1
+kind: Event
+metadata:
+  name: create-privileged-pod
+spec:
+  # actions are taken on his behalf
+  intruder:
+    serviceAccount: intruder
+    # or
+    # token: <Token>
+  operations:
+  - id: privileged-pod
+    verb: create # get, list, update etc. Special: auth, exec, logs
+    # YAML resource definition
+    resource: 
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        name: privileged-pod
+        labels:
+          app.kubernetes.io/part-of: mallory-operator
+      spec:
+        containers:
+        - name: web
+          image: nginx:alpine
+          securityContext:
+            privileged: true
+          ports:
+          - containerPort: 80
+```
+
 ## Contributing
 // TODO(user): Add detailed information on how you would like others to contribute to this project
-
-## License
-
-Copyright 2025.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 
