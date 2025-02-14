@@ -21,7 +21,8 @@ Kubernetes controller for modeling threat scenarios. It creates resources and ex
 - **Incident Response Drills:** Practice and refine response procedures for different threat scenarios.
 
 - **Educational Purposes:** Demonstrate simulated threat activities for security training sessions.
-> **Disclaimer:** Mallory Operator is intended for controlled and ethical use only. Ensure that simulations are conducted in compliant environments and in accordance with legal requirements.
+> [!IMPORTANT]  
+>  Mallory Operator is intended for controlled and ethical use only. Ensure that simulations are conducted in compliant environments and in accordance with legal requirements.
 
 ## Getting Started
 
@@ -31,7 +32,8 @@ Kubernetes controller for modeling threat scenarios. It creates resources and ex
 helm install mallory oci://registry-1.docker.io/explabs/mallory
 ```
 
-> **NOTE**: If you encounter RBAC errors, you may need to grant yourself cluster-admin
+> [!NOTE] 
+>  If you encounter RBAC errors, you may need to grant yourself cluster-admin
 privileges or be logged in as admin.
 
 ### Apply intruder
@@ -41,7 +43,8 @@ You can apply the examples from `actions` directory:
 kubectl apply -f actions
 ```
 
->**NOTE**: Ensure that the samples has default values to test it out.
+> [!NOTE] 
+>  Ensure that the samples has default values to test it out.
 
 ### Uninstall
 ```sh
