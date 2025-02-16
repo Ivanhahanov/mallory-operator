@@ -40,15 +40,15 @@ Apply intruder ServiceAccount and ClusterRole for intruder user
 ```sh
 kubectl apply -f intruder/manifests
 ```
+> [!TIP]
+> Visit [Docs](./intruder/README.md) about **Intruder** image that is used for advanced threat modeling.
+
 ### Apply Actions
 You can apply the examples from `actions` directory:
 
 ```sh
 kubectl apply -f actions
 ```
-
-> [!NOTE] 
->  Ensure that the samples has default values to test it out.
 
 ### Uninstall
 ```sh
