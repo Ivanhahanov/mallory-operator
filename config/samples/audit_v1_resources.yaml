@@ -1,9 +1,0 @@
-apiVersion: audit.mallory.1440.space/v1
-kind: Resources
-metadata:
-  labels:
-    app.kubernetes.io/name: mallory-operator
-    app.kubernetes.io/managed-by: kustomize
-  name: resources-sample
-spec:
-  # TODO(user): Add fields here
