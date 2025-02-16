@@ -36,6 +36,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
 	mallory1440spacev1 "mallory-operator/api/v1"
+	malloryiov1 "mallory-operator/api/v1"
 	"mallory-operator/internal/controller"
 	// +kubebuilder:scaffold:imports
 )
@@ -49,6 +50,7 @@ func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
 	utilruntime.Must(mallory1440spacev1.AddToScheme(scheme))
+	utilruntime.Must(malloryiov1.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
 

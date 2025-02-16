@@ -4,7 +4,10 @@ metadata:
   name: logs-etcd
 spec:
   intruder:
-    serviceAccount: intruder
+    user: 
+      name: intruder
+      groups: 
+        - intruder
   operations:
   - id: logs-etcd
     verb: logs

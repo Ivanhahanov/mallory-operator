@@ -51,13 +51,20 @@ spec:
             description: EventSpec defines the desired state of Event
             properties:
               intruder:
-                description: Foo is an example field of Event. Edit event_types.go
-                  to remove/update
                 properties:
                   serviceAccount:
                     type: string
                   token:
                     type: string
+                  user:
+                    properties:
+                      groups:
+                        items:
+                          type: string
+                        type: array
+                      name:
+                        type: string
+                    type: object
                 type: object
               operations:
                 items:

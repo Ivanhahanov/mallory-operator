@@ -4,7 +4,10 @@ metadata:
   name: create-role-with-wildcard
 spec:
   intruder:
-    serviceAccount: intruder
+    user: 
+      name: intruder
+      groups: 
+        - intruder
   operations:
   - id: wildcard-resources-role
     verb: create

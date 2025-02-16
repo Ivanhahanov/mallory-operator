@@ -29,16 +29,26 @@ type EventSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of Event. Edit event_types.go to remove/update
-	Intruder   Intruder     `json:"intruder,omitempty"`
+	// +kubebuilder:validation:Optional
+	Intruder Intruder `json:"intruder,omitempty"`
+
 	Operations []*Operation `json:"operations,omitempty"`
 }
 
 type Intruder struct {
 	// +kubebuilder:validation:Optional
+	User *IntruderUser `json:"user,omitempty"`
+	// +kubebuilder:validation:Optional
 	ServiceAccount string `json:"serviceAccount,omitempty"`
 	// +kubebuilder:validation:Optional
 	Token string `json:"token,omitempty"`
+}
+
+type IntruderUser struct {
+	// +kubebuilder:validation:Optional
+	Name string `json:"name,omitempty"`
+	// +kubebuilder:validation:Optional
+	Groups []string `json:"groups,omitempty"`
 }
 type Operation struct {
 	// +kubebuilder:validation:Required

@@ -4,7 +4,10 @@ metadata:
   name: list-cluster-roles
 spec:
   intruder:
-    serviceAccount: intruder
+    user: 
+      name: intruder
+      groups: 
+        - intruder
   operations:
   - id: cluster-roles
     verb: list

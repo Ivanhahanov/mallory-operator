@@ -2,4 +2,5 @@
 resources:
 - audit_v1_resources.yaml
 - audit_v1_actions.yaml
+- v1_user.yaml
 # +kubebuilder:scaffold:manifestskustomizesamples

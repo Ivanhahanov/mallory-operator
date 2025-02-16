@@ -35,7 +35,11 @@ helm install mallory oci://registry-1.docker.io/explabs/mallory
 > [!NOTE] 
 >  If you encounter RBAC errors, you may need to grant yourself cluster-admin
 privileges or be logged in as admin.
-
+### Setup intruder
+Apply intruder ServiceAccount and ClusterRole for intruder user
+```sh
+kubectl apply -f intruder/manifests
+```
 ### Apply Actions
 You can apply the examples from `actions` directory:
 

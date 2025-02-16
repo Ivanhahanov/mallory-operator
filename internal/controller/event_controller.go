@@ -61,6 +61,7 @@ type EventReconciler struct {
 // +kubebuilder:rbac:groups=mallory.io,resources=events,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=mallory.io,resources=events/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=mallory.io,resources=events/finalizers,verbs=update
+// +kubebuilder:rbac:groups="",resources=users;groups;serviceaccounts,verbs=impersonate
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -193,6 +194,12 @@ func (r *EventReconciler) generateIntruderRestConfig(intruder v1.Intruder, names
 		restConfig = rest.CopyConfig(r.Config)
 		restConfig.Impersonate = rest.ImpersonationConfig{
 			UserName: fmt.Sprintf("system:serviceaccount:%s:%s", namespace, intruder.ServiceAccount),
+		}
+	} else if intruder.User != nil {
+		restConfig = rest.CopyConfig(r.Config)
+		restConfig.Impersonate = rest.ImpersonationConfig{
+			UserName: intruder.User.Name,
+			Groups:   intruder.User.Groups,
 		}
 	} else {
 		restConfig = r.Config

@@ -5,6 +5,14 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
+  - ""
+  resources:
+  - groups
+  - serviceaccounts
+  - users
+  verbs:
+  - impersonate
+- apiGroups:
   - mallory.io
   resources:
   - events
@@ -30,9 +38,3 @@ rules:
   - get
   - patch
   - update
-- apiGroups: 
-  - ""
-  resources: 
-  - "serviceaccounts"
-  verbs: 
-  - "impersonate"

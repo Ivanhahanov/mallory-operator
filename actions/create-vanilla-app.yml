@@ -1,0 +1,54 @@
+apiVersion: mallory.io/v1
+kind: Event
+metadata:
+  name: vanilla-app
+spec:
+  intruder:
+    serviceAccount: intruder
+  operations:
+  - id: vanilla-deploy
+    verb: create
+    resource:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: vanilla-deploy
+        app.kubernetes.io/part-of: mallory-operator
+      spec:
+        selector:
+          matchLabels:
+            app: vanilla-deploy
+        template:
+          metadata:
+            labels:
+              app: vanilla-deploy
+              app.kubernetes.io/part-of: mallory-operator
+          spec:
+            containers:
+            - name: web
+              image: nginx
+              securityContext:
+                privileged: true
+              resources:
+                limits:
+                  memory: "128Mi"
+                  cpu: "500m"
+              ports:
+              - containerPort: 80
+  - id: vanilla-svc
+    verb: create
+    resource:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: vanilla-svc
+        labels:
+          app.kubernetes.io/part-of: mallory-operator
+      spec:
+        ports:
+          - port: 80
+        selector:
+          app: vanilla-deploy
+      
+
+

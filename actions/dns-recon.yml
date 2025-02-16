@@ -1,0 +1,21 @@
+apiVersion: mallory.io/v1
+kind: Event
+metadata:
+  name: dns-recon
+spec:
+  intruder:
+    serviceAccount: intruder
+  operations:
+  - id: roles
+    verb: create
+    resource:
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        name: dns-recon
+      spec:
+        containers:
+        - name: intruder
+          image: explabs/mallory-intruder
+          args: 
+           - "k8spider all"
