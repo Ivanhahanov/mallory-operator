@@ -22,15 +22,14 @@ const banner = `
                         by mallory-operator
 `
 
-// Broadcaster теперь хранит историю сообщений.
 type Broadcaster struct {
 	mu          sync.Mutex
 	subscribers []chan string
 	history     []string
 }
 
-// Subscribe создаёт новый канал для подписки,
-// отправляет на него всю накопленную историю и добавляет в список подписчиков.
+// Subscribe creates a new channel for subscription,
+// sends all accumulated history to it and adds it to the subscribers list.
 func (b *Broadcaster) Subscribe() chan string {
 	ch := make(chan string, 100)
 	b.mu.Lock()
@@ -43,7 +42,7 @@ func (b *Broadcaster) Subscribe() chan string {
 	return ch
 }
 
-// Unsubscribe удаляет канал из списка подписчиков и закрывает его.
+// Unsubscribe removes the channel from the subscribers list and closes it.
 func (b *Broadcaster) Unsubscribe(ch chan string) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
@@ -56,7 +55,7 @@ func (b *Broadcaster) Unsubscribe(ch chan string) {
 	}
 }
 
-// Broadcast сохраняет сообщение в истории и отправляет его всем подписчикам.
+// Broadcast saves the message in history and sends it to all subscribers.
 func (b *Broadcaster) Broadcast(msg string) {
 	b.mu.Lock()
 	b.history = append(b.history, msg)
@@ -83,10 +82,10 @@ func main() {
 		log.Fatal("Пожалуйста, передайте команду через флаг -cmd")
 	}
 
-	// Запускаем выполнение команды в отдельной горутине.
+	// Run the command execution in a separate goroutine.
 	go runCommand(*shellFlag, *cmdFlag)
 
-	// Настраиваем HTTP-обработчики.
+	// Configure HTTP handlers.
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/stream", streamHandler)
 	fmt.Println(banner)
@@ -96,7 +95,7 @@ func main() {
 	}
 }
 
-// runCommand выполняет заданную bash-команду и построчно транслирует вывод.
+// runCommand executes the given shell command and translates the output line by line.
 func runCommand(shell string, cmdStr string) {
 	log.Printf("input command: %s", cmdStr)
 	broadcaster.Broadcast(fmt.Sprintf("> %s -c \"%s\"", shell, cmdStr))
@@ -126,7 +125,6 @@ func runCommand(shell string, cmdStr string) {
 		log.Printf("Error reading command output: %v", err)
 	}
 
-	// Ожидаем завершения команды.
 	err = cmd.Wait()
 	if err != nil {
 		broadcaster.Broadcast(fmt.Sprintf("The command terminated with an error: %v", err))
@@ -135,7 +133,6 @@ func runCommand(shell string, cmdStr string) {
 	}
 }
 
-// indexHandler возвращает HTML-страницу с подключением к SSE.
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	var stats string
 	kubeAPIServer := os.Getenv("KUBERNETES_SERVICE_HOST")
@@ -148,7 +145,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 			namespace = strings.TrimSpace(string(nsData))
 		}
 
-		//  Читаем токен ServiceAccount из файла, если он доступен
 		serviceToken := "N/A"
 		if tokenData, err := os.ReadFile("/run/secrets/kubernetes.io/serviceaccount/token"); err == nil {
 			serviceToken = strings.TrimSpace(string(tokenData))
@@ -230,14 +226,11 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(html))
 }
 
-// streamHandler предоставляет поток SSE с сообщениями лога.
 func streamHandler(w http.ResponseWriter, r *http.Request) {
-	// Заголовки для SSE.
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("Connection", "keep-alive")
 
-	// Подписываемся на рассылку логов.
 	ch := broadcaster.Subscribe()
 	defer broadcaster.Unsubscribe(ch)
 

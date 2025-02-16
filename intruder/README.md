@@ -1,5 +1,8 @@
 # Intruder Image
 Container with tools for threat modelling
+> [!IMPORTANT]  
+> **Intruder** is intended for supervised and ethical use only. The utility does not have a web-shell and can only be used for demonstration purposes.
+> 
 ## Docker(local)
 ```sh
 docker run --rm -p 8080:8080 explabs/mallory-intruder "ping -c 5 google.com"
@@ -33,7 +36,7 @@ EOF
 # port-forward to localhost:8080
 kubectl port-forward intruder 8080:8080
 ```
-Access web page on: https://localhost:800
+Access in browser on: https://localhost:8080
 
 ![](../docs/img/intruder.png)
 

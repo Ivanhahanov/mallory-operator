@@ -22,7 +22,7 @@ Kubernetes controller for modeling threat scenarios. It creates resources and ex
 
 - **Educational Purposes:** Demonstrate simulated threat activities for security training sessions.
 > [!IMPORTANT]  
->  Mallory Operator is intended for controlled and ethical use only. Ensure that simulations are conducted in compliant environments and in accordance with legal requirements.
+>  **Mallory Operator** is intended for controlled and ethical use only. Ensure that simulations are conducted in compliant environments and in accordance with legal requirements.
 
 ## Getting Started
 
