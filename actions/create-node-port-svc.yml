@@ -4,7 +4,7 @@ metadata:
   name: create-node-port-svc
 spec:
   intruder:
-    serviceAccount: intruder
+    username: system:serviceaccount:default:intruder
   operations:
   - id: node-port-svc
     verb: create

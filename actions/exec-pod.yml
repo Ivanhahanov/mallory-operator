@@ -4,7 +4,7 @@ metadata:
   name: exec-etcd
 spec:
   intruder:
-    serviceAccount: intruder
+    username: system:serviceaccount:default:intruder
   operations:
   - id: roles
     verb: exec

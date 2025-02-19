@@ -8,6 +8,11 @@ FROM alpine:3
 ARG K8SPIDER=k8spider_v3.0.0_linux_amd64.tar.gz
 WORKDIR /intruder
 RUN apk add curl
+# install etcdclt
+RUN wget https://github.com/etcd-io/etcd/releases/download/v3.5.18/etcd-v3.5.18-linux-amd64.tar.gz && \
+    tar xvzf etcd-v3.5.18-linux-amd64.tar.gz && \
+    mv ./etcd-v3.5.18-linux-amd64/etcdctl /usr/bin
+
 # install k8spider
 RUN wget https://github.com/Esonhugh/k8spider/releases/download/v3.0.0/$K8SPIDER && \
   tar xvzf $K8SPIDER && \

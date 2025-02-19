@@ -79,7 +79,7 @@ func main() {
 	flag.Parse()
 
 	if *cmdFlag == "" {
-		log.Fatal("Пожалуйста, передайте команду через флаг -cmd")
+		log.Fatal("need to provide flag -c")
 	}
 
 	// Run the command execution in a separate goroutine.
@@ -118,6 +118,7 @@ func runCommand(shell string, cmdStr string) {
 	scanner := bufio.NewScanner(stdout)
 	for scanner.Scan() {
 		line := scanner.Text()
+		log.Println(line)
 		broadcaster.Broadcast(line)
 	}
 

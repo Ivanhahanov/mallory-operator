@@ -115,14 +115,18 @@ func (r *EventReconciler) processOperations(ctx context.Context, event *v1.Event
 	result := "Success"
 	for _, operation := range event.Spec.Operations {
 		if err := r.processSingleOperation(ctx, event, namespace, operation); err != nil {
-			result = "Error"
+			if errors.IsForbidden(err) {
+				result = "Blocked"
+			} else {
+				result = "Error"
+			}
 		}
 	}
 	return result
 }
 
 func (r *EventReconciler) processSingleOperation(ctx context.Context, event *v1.Event, namespace string, operation *v1.Operation) error {
-	output, err := r.processResourceOperation(ctx, event.Spec.Intruder, namespace, operation)
+	output, err := r.processResourceOperation(ctx, event, namespace, operation)
 	if err != nil {
 		r.Recorder.Event(event, EventTypeWarning, OperationFailed, fmt.Sprintf("failed to process resource operation: %v", err))
 		return err
@@ -190,19 +194,14 @@ func (r *EventReconciler) generateIntruderRestConfig(intruder v1.Intruder, names
 			TLSClientConfig: r.Config.TLSClientConfig,
 			BearerToken:     intruder.Token,
 		}
-	} else if intruder.ServiceAccount != "" {
-		restConfig = rest.CopyConfig(r.Config)
+		return restConfig
+	}
+	restConfig = rest.CopyConfig(r.Config)
+	if intruder.UserName != "" {
 		restConfig.Impersonate = rest.ImpersonationConfig{
-			UserName: fmt.Sprintf("system:serviceaccount:%s:%s", namespace, intruder.ServiceAccount),
+			UserName: intruder.UserName,
+			Groups:   intruder.Groups,
 		}
-	} else if intruder.User != nil {
-		restConfig = rest.CopyConfig(r.Config)
-		restConfig.Impersonate = rest.ImpersonationConfig{
-			UserName: intruder.User.Name,
-			Groups:   intruder.User.Groups,
-		}
-	} else {
-		restConfig = r.Config
 	}
 	return restConfig
 }
@@ -220,8 +219,8 @@ func (r *EventReconciler) deleteResourceWithIntruder(ctx context.Context, intrud
 }
 
 // processResourceOperation performs an operation (create, delete, get, etc.) on a Kubernetes resource.
-func (r *EventReconciler) processResourceOperation(ctx context.Context, intruder v1.Intruder, namespace string, op *v1.Operation) (string, error) {
-
+func (r *EventReconciler) processResourceOperation(ctx context.Context, event *v1.Event, namespace string, op *v1.Operation) (string, error) {
+	intruder := event.Spec.Intruder
 	cl, err := r.buildIntruderClient(intruder, namespace)
 	if err != nil {
 		return "", fmt.Errorf("failed to create intruder client: %w", err)
@@ -239,7 +238,7 @@ func (r *EventReconciler) processResourceOperation(ctx context.Context, intruder
 	fmt.Println(namespace, intruder)
 	switch op.Verb {
 	case "create":
-		return r.handleCreate(ctx, cl, obj)
+		return r.handleCreate(ctx, cl, obj, event.Spec.Rule)
 	case "delete":
 		return "", cl.Delete(ctx, &obj)
 	case "get":
@@ -277,17 +276,31 @@ func (r *EventReconciler) handleLogs(ctx context.Context, cl client.Client, rc *
 }
 
 // handleCreate performs an idempotent create operation.
-func (r *EventReconciler) handleCreate(ctx context.Context, cl client.Client, obj unstructured.Unstructured) (string, error) {
+func (r *EventReconciler) handleCreate(ctx context.Context, cl client.Client, obj unstructured.Unstructured, rule string) (string, error) {
 	existing := &unstructured.Unstructured{}
 	existing.SetAPIVersion(obj.GetAPIVersion())
 	existing.SetKind(obj.GetKind())
-	key := client.ObjectKey{Name: obj.GetName(), Namespace: obj.GetNamespace()}
 
+	key := client.ObjectKey{Name: obj.GetName(), Namespace: obj.GetNamespace()}
 	if err := cl.Get(ctx, key, existing); err == nil {
 		return "", nil // Object already exists
 	} else if !errors.IsNotFound(err) {
 		return "", fmt.Errorf("failed to get resource: %w", err)
 	}
+
+	annotations := obj.GetAnnotations()
+	if annotations == nil {
+		annotations = map[string]string{}
+	}
+	annotations["mallory.io/rule"] = rule
+	obj.SetAnnotations(annotations)
+
+	labels := obj.GetLabels()
+	if labels == nil {
+		labels = map[string]string{}
+	}
+	labels["app.kubernetes.io/part-of"] = "mallory-operator"
+	obj.SetLabels(labels)
 
 	return "", cl.Create(ctx, &obj)
 }

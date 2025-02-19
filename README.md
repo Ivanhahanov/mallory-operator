@@ -1,33 +1,33 @@
 # Mallory Operator
 
-Kubernetes controller for modeling threat scenarios. It creates resources and executes actions such as reconnaissance, privilege escalation, and data exfiltration to evaluate security measures.
+Kubernetes controller for modeling threat scenarios. It creates resources and executes malicious actions such as reconnaissance, privilege escalation, and data exfiltration to evaluate security measures.
+> [!IMPORTANT]  
+>  **Mallory Operator** is intended for controlled and ethical use only. Ensure that simulations are conducted in compliant environments and in accordance with legal requirements.
 
 ## Features
-- **Dynamic Resource Creation:** Automatically generate Kubernetes resources to replicate different scenarios.
+- **Dynamic Resource Creation:** automatically generating Kubernetes resources to replicate different scenarios.
   
-- **Threat Simulation:** Execute actions including:
-  - **Reconnaissance:** Collect cluster information.
-  - **Privilege Escalation:** Imitate attempts to gain elevated access.
-  - **Data Exfiltration:** Simulate the extraction of sensitive data.
+- **Threat Simulation:** executing actions including:
+  - **Reconnaissance:** collecting cluster information.
+  - **Privilege Escalation:** imitating attempts to gain elevated access.
+  - **Data Exfiltration:** imitating the extraction of sensitive data.
   
-- **Customizable Scenarios:** Configure simulation parameters to suit various testing requirements.
+- **Customizable Scenarios:** configuring simulation parameters to suit various testing requirements.
 
-- **Training and Testing:** Provide a controlled environment for evaluating security defenses and training on incident response.
+- **Training and Testing:** providing a controlled environment for security defenses audit and incident response trainings.
 
 ### Use Cases
 
-- **Security Testing:** Assess the effectiveness of security measures, detection systems, and response processes.
+- **Security Testing:** assess the effectiveness of security measures, detection systems, and response processes.
 
-- **Incident Response Drills:** Practice and refine response procedures for different threat scenarios.
+- **Incident Response Drills:** practice and refine response procedures for different threat scenarios.
 
-- **Educational Purposes:** Demonstrate simulated threat activities for security training sessions.
-> [!IMPORTANT]  
->  **Mallory Operator** is intended for controlled and ethical use only. Ensure that simulations are conducted in compliant environments and in accordance with legal requirements.
+- **Educational Purposes:** demonstrate simulated threat activities for security training sessions.
 
 ## Getting Started
 
 ### Deploy on the cluster
-
+Mallory Operator is deployed via Helm using the following command:
 ```sh
 helm install mallory oci://registry-1.docker.io/explabs/mallory
 ```
@@ -35,8 +35,8 @@ helm install mallory oci://registry-1.docker.io/explabs/mallory
 > [!NOTE] 
 >  If you encounter RBAC errors, you may need to grant yourself cluster-admin
 privileges or be logged in as admin.
-### Setup intruder
-Apply intruder ServiceAccount and ClusterRole for intruder user
+### Setup Intruder
+Apply ServiceAccount and ClusterRole of the user Intruder:
 ```sh
 kubectl apply -f intruder/manifests
 ```
@@ -44,7 +44,7 @@ kubectl apply -f intruder/manifests
 > Visit [Docs](./intruder/README.md) about **Intruder** image that is used for advanced threat modeling.
 
 ### Apply Actions
-You can apply the examples from `actions` directory:
+You can apply the examples from the `actions` directory:
 
 ```sh
 kubectl apply -f actions

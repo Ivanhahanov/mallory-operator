@@ -4,7 +4,7 @@ metadata:
   name: create-role-with-write-privileges
 spec:
   intruder:
-    serviceAccount: intruder
+    username: system:serviceaccount:default:intruder
   operations:
   - id: write-privileges-role
     verb: create
@@ -13,9 +13,6 @@ spec:
       kind: Role
       metadata:
         name: write-privileges-role
-        labels:
-          app.kubernetes.io/part-of: mallory-operator
-          mallory/rule: Role-With-Write-Privileges-Created
       rules:
       - apiGroups:
           - ""

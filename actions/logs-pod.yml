@@ -4,10 +4,9 @@ metadata:
   name: logs-etcd
 spec:
   intruder:
-    user: 
-      name: intruder
-      groups: 
-        - intruder
+    username: intruder
+    groups: 
+      - intruder
   operations:
   - id: logs-etcd
     verb: logs

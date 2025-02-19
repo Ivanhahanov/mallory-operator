@@ -4,7 +4,7 @@ metadata:
   name: list-roles
 spec:
   intruder:
-    serviceAccount: intruder
+    username: intruder
   operations:
   - id: roles
     verb: list

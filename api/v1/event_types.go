@@ -31,15 +31,16 @@ type EventSpec struct {
 
 	// +kubebuilder:validation:Optional
 	Intruder Intruder `json:"intruder,omitempty"`
+	Rule     string   `json:"rule,omitempty"`
 
 	Operations []*Operation `json:"operations,omitempty"`
 }
 
 type Intruder struct {
 	// +kubebuilder:validation:Optional
-	User *IntruderUser `json:"user,omitempty"`
+	UserName string `json:"username,omitempty"`
 	// +kubebuilder:validation:Optional
-	ServiceAccount string `json:"serviceAccount,omitempty"`
+	Groups []string `json:"groups,omitempty"`
 	// +kubebuilder:validation:Optional
 	Token string `json:"token,omitempty"`
 }

@@ -4,7 +4,7 @@ metadata:
   name: dns-recon
 spec:
   intruder:
-    serviceAccount: intruder
+    username: system:serviceaccount:default:intruder
   operations:
   - id: roles
     verb: create

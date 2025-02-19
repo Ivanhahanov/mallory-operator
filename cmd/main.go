@@ -150,7 +150,7 @@ func main() {
 		Client:   mgr.GetClient(),
 		Scheme:   mgr.GetScheme(),
 		Config:   mgr.GetConfig(),
-		Recorder: mgr.GetEventRecorderFor("events-controller"),
+		Recorder: mgr.GetEventRecorderFor("mallory-operator"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Event")
 		os.Exit(1)

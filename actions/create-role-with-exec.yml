@@ -4,7 +4,7 @@ metadata:
   name: create-role-with-exec
 spec:
   intruder:
-    serviceAccount: intruder
+    username: intruder
   operations:
   - id: pod-exec-role
     verb: create

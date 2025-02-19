@@ -1,40 +1,30 @@
 apiVersion: mallory.io/v1
 kind: Event
 metadata:
-  name: create-hostnetwork-deployment
+  name: create-hostnetwork-pod
 spec:
   intruder:
-    serviceAccount: intruder
+    username: system:serviceaccount:default:intruder
+  rule: CreateHostNetworkPod
   operations:
   - id: hostnetwork-pod
     verb: create
     resource:
-      apiVersion: apps/v1
-      kind: Deployment
+      apiVersion: v1
+      kind: Pod
       metadata:
         name: hostnetwork-pod
-        app.kubernetes.io/part-of: mallory-operator
-        mallory/rule: HostNetwork-Pod-Created
       spec:
-        selector:
-          matchLabels:
-            app: hostnetwork-pod
-        template:
-          metadata:
-            labels:
-              app: hostnetwork-pod
-              app.kubernetes.io/part-of: mallory-operator
-          spec:
-            hostNetwork: true
-            containers:
-            - name: web
-              image: nginx
-              resources:
-                limits:
-                  memory: "128Mi"
-                  cpu: "500m"
-              ports:
-              - containerPort: 80
+        hostNetwork: true
+        containers:
+        - name: web
+          image: nginx
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+          - containerPort: 80
       
 
 

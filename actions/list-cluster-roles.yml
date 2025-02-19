@@ -4,9 +4,8 @@ metadata:
   name: list-cluster-roles
 spec:
   intruder:
-    user: 
-      name: intruder
-      groups: 
+    username: intruder
+    groups: 
         - intruder
   operations:
   - id: cluster-roles
