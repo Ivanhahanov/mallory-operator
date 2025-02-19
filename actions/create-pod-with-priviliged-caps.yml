@@ -1,0 +1,33 @@
+apiVersion: mallory.io/v1
+kind: Event
+metadata:
+  name: create-pod-with-priviliged-caps
+spec:
+  intruder:
+    username: system:serviceaccount:default:intruder
+  rule: CreatePodWithPrivilegedCapabilities
+  operations:
+  - id: pod-with-priviliged-caps
+    verb: create
+    resource:
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        name: pod-with-priviliged-caps
+      spec:
+        containers:
+        - name: web
+          image: nginx
+          securityContext:
+            capabilities:
+              add: 
+                - "SYS_ADMIN"
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+          - containerPort: 80
+      
+
+

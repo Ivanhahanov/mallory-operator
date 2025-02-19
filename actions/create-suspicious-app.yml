@@ -1,0 +1,60 @@
+apiVersion: mallory.io/v1
+kind: Event
+metadata:
+  name: create-suspicious-app
+spec:
+  intruder:
+    username: intruder
+  rule: UnexpectedNamespaceCreation
+  operations:
+  - id: suspicious-ns
+    verb: create
+    resource:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: suspicious
+  - id: suspicious-deploy
+    verb: create
+    resource:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: suspicious-deploy
+        namespace: suspicious
+      spec:
+        selector:
+          matchLabels:
+            app: suspicious-deploy
+        template:
+          metadata:
+            labels:
+              app: suspicious-deploy
+          spec:
+            containers:
+            - name: web
+              image: nginx
+              securityContext:
+                privileged: true
+              resources:
+                limits:
+                  memory: "128Mi"
+                  cpu: "500m"
+              ports:
+              - containerPort: 80
+  - id: suspicious-svc
+    verb: create
+    resource:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: suspicious-svc
+        namespace: suspicious
+      spec:
+        ports:
+          - port: 80
+        selector:
+          app: suspicious-deploy
+      
+
+

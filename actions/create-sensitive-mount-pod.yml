@@ -1,0 +1,36 @@
+apiVersion: mallory.io/v1
+kind: Event
+metadata:
+  name: create-sensitive-mount-pod
+spec:
+  intruder:
+    username: system:serviceaccount:default:intruder
+  rule: CreatePodWithHostPathVolume
+  operations:
+  - id: sensitive-mount-deployment
+    verb: create
+    resource:
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        name: sensitive-mount-pod
+      spec:
+        containers:
+        - name: web
+          image: nginx
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+          - containerPort: 80
+          volumeMounts:
+          - mountPath: /host/etc
+            name: etc
+        volumes:
+        - name: etc
+          hostPath:
+            path: /etc
+      
+
+

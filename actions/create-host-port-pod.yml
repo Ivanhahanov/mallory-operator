@@ -1,0 +1,30 @@
+apiVersion: mallory.io/v1
+kind: Event
+metadata:
+  name: create-host-port-pod
+spec:
+  intruder:
+    username: system:serviceaccount:default:intruder
+  rule: RunContainerAsRoot
+  operations:
+  - id: host-port-pod
+    verb: create
+    resource:
+      apiVersion: v1
+      kind: Pod    
+      metadata:
+        name: host-port-pod
+      spec:
+        containers:
+        - name: web
+          image: nginx
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+          - containerPort: 80
+            hostPort: 80
+      
+
+
