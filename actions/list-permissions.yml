@@ -4,7 +4,7 @@ metadata:
   name: list-permissions
 spec:
   intruder:
-    username: system:serviceaccount:default:intruder
+    username: intruder
   operations:
   - id: can-i-create-pods
     verb: auth

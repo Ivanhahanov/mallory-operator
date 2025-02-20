@@ -190,9 +190,11 @@ func (r *EventReconciler) generateIntruderRestConfig(intruder v1.Intruder, names
 
 	if intruder.Token != "" {
 		restConfig = &rest.Config{
-			Host:            r.Config.Host,
-			TLSClientConfig: r.Config.TLSClientConfig,
-			BearerToken:     intruder.Token,
+			Host:      r.Config.Host,
+			Transport: r.Config.Transport,
+			TLSClientConfig: rest.TLSClientConfig{
+				CAData: r.Config.CAData,
+			},
 		}
 		return restConfig
 	}
